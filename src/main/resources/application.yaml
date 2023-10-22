@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: grocery-bot
+bot:
+  path: /api/v1/webhook
+  username: GroceryListHelperBot
+logging:
+  level:
+    "org.springframework.web.filter.CommonsRequestLoggingFilter": DEBUG

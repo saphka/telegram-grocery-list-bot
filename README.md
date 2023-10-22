@@ -1,2 +1,2 @@
-# telegram-grocery-list-bot
+# Telegram Grocery List Bot
 Grocery list
