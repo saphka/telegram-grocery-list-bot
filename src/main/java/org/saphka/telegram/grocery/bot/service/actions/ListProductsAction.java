@@ -23,10 +23,15 @@ public class ListProductsAction implements Action<String, String> {
     @Override
     public void execute(StateContext<String, String> context) {
         var message = (Message) context.getMessageHeader("message");
+        var list = groceryListService.getOrCreateList(message.getFrom().getId());
+
         var msg = new SendMessage();
         msg.setChatId(message.getChatId());
-        msg.setText(String.join("\n",
-                groceryListService.getOrCreateList(message.getFrom().getId()).products()));
+        if (!list.products().isEmpty()) {
+            msg.setText(String.join("\n", list.products()));
+        } else {
+            msg.setText("<empty>");
+        }
         try {
             telegramService.execute(msg);
         } catch (TelegramApiException e) {

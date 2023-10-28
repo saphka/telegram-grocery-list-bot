@@ -13,8 +13,8 @@ public record GroceryList(@Id String id, @Indexed Set<String> owners, Set<String
 
     public GroceryList(String id, Set<String> owners, Set<String> products) {
         this.id = id;
-        this.owners = Set.copyOf(Objects.requireNonNull(owners, "Owners list cannot be null"));
-        this.products = Set.copyOf(Objects.requireNonNull(products, "Products cannot be null"));
+        this.owners = Set.copyOf(Objects.requireNonNullElse(owners, Set.of()));
+        this.products = Set.copyOf(Objects.requireNonNullElse(products, Set.of()));
     }
 
     public GroceryList owner(Long ownerId) {
