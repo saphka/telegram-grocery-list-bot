@@ -23,7 +23,8 @@ public class TelegramWebhookAdapter extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        return service.processUpdate(update);
+        service.processUpdate(update);
+        return null;
     }
 
     @Override

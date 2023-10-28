@@ -2,11 +2,8 @@ package org.saphka.telegram.grocery.bot.controller;
 
 import org.saphka.telegram.grocery.bot.service.TelegramService;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @RestController
@@ -20,7 +17,9 @@ public class WebhookController {
     }
 
     @PostMapping
-    public BotApiMethod<?> handleUpdate(@RequestBody Update update) {
-        return service.processUpdate(update);
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public String handleUpdate(@RequestBody Update update) {
+        service.processUpdate(update);
+        return "Working";
     }
 }

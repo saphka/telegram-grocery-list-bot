@@ -2,5 +2,5 @@ spring:
   application:
     name: grocery-bot
 bot:
-  path: /api/v1/webhook
+  path: ""
   username: GroceryListHelperBot
