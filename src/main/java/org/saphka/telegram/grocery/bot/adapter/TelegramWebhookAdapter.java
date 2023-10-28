@@ -1,7 +1,7 @@
 package org.saphka.telegram.grocery.bot.adapter;
 
 import org.saphka.telegram.grocery.bot.config.BotProperties;
-import org.saphka.telegram.grocery.bot.service.TelegramService;
+import org.saphka.telegram.grocery.bot.service.TelegramUpdateProcessor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
@@ -13,17 +13,17 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class TelegramWebhookAdapter extends TelegramWebhookBot {
 
     private final BotProperties properties;
-    private final TelegramService service;
+    private final TelegramUpdateProcessor telegramUpdateProcessor;
 
-    public TelegramWebhookAdapter(BotProperties properties, TelegramService service) {
+    public TelegramWebhookAdapter(BotProperties properties, TelegramUpdateProcessor telegramUpdateProcessor) {
         super(properties.token());
         this.properties = properties;
-        this.service = service;
+        this.telegramUpdateProcessor = telegramUpdateProcessor;
     }
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        service.processUpdate(update);
+        telegramUpdateProcessor.processUpdate(update);
         return null;
     }
 

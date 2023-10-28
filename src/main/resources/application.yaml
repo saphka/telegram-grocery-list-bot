@@ -4,3 +4,6 @@ spring:
 bot:
   path: ""
   username: GroceryListHelperBot
+logging:
+  level:
+    "org.saphka.telegram.grocery.bot.service.TelegramUpdateProcessor": DEBUG
