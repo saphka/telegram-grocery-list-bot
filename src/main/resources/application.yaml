@@ -6,4 +6,6 @@ bot:
   username: GroceryListHelperBot
 logging:
   level:
-    "org.saphka.telegram.grocery.bot.service.TelegramUpdateProcessor": DEBUG
+    "org.saphka.telegram.grocery.bot.service.TelegramUpdateProcessor": INFO
+    "org.springframework.data.repository.config.RepositoryConfigurationDelegate": WARN
+    "org.springframework.context.support.PostProcessorRegistrationDelegate.BeanPostProcessorChecker": WARN
