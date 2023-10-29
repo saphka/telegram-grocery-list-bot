@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,10 +24,10 @@ public record GroceryList(@Id String id, @Indexed Set<String> owners, Set<String
         return new GroceryList(this.id, owners, this.products);
     }
 
-    public GroceryList product(String product) {
-        var products = new LinkedHashSet<>(this.products);
-        products.add(product);
-        return new GroceryList(this.id, this.owners, products);
+    public GroceryList products(Collection<String> products) {
+        var newProducts = new LinkedHashSet<>(this.products);
+        newProducts.addAll(products);
+        return new GroceryList(this.id, this.owners, newProducts);
     }
 
     @Override
