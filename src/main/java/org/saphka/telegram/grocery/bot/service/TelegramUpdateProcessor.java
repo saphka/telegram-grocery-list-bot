@@ -22,9 +22,9 @@ import java.util.Optional;
 public class TelegramUpdateProcessor {
     private static final Logger log = LoggerFactory.getLogger(TelegramUpdateProcessor.class);
     private final StateMachineFactory<String, String> stateMachineFactory;
-    private final StateMachinePersister<String, String, String> stateMachinePersister;
+    private final StateMachinePersister<String, String, Object> stateMachinePersister;
 
-    public TelegramUpdateProcessor(StateMachineFactory<String, String> stateMachineFactory, StateMachinePersister<String, String, String> stateMachinePersister) {
+    public TelegramUpdateProcessor(StateMachineFactory<String, String> stateMachineFactory, StateMachinePersister<String, String, Object> stateMachinePersister) {
         this.stateMachineFactory = stateMachineFactory;
         this.stateMachinePersister = stateMachinePersister;
     }

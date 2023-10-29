@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface GroceryListRepository extends CrudRepository<GroceryList, String> {
 
-    Optional<GroceryList> findFirstByOwners(String owner);
+    Optional<GroceryList> findFirstByOwnersContaining(String owner);
 }
 

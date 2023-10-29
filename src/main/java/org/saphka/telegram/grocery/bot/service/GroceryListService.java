@@ -17,7 +17,7 @@ public class GroceryListService {
     }
 
     public GroceryList getOrCreateList(Long ownerId) {
-        return repository.findFirstByOwners(ownerId.toString()).orElseGet(() ->
+        return repository.findFirstByOwnersContaining(ownerId.toString()).orElseGet(() ->
                 repository.save(new GroceryList(
                         UUID.randomUUID().toString(),
                         Set.of(ownerId.toString()),

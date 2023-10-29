@@ -2,16 +2,16 @@ package org.saphka.telegram.grocery.bot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.data.redis.RedisStateMachineContextRepository;
-import org.springframework.statemachine.data.redis.RedisStateMachinePersister;
-import org.springframework.statemachine.persist.RepositoryStateMachinePersist;
+import org.springframework.statemachine.data.mongodb.MongoDbRepositoryStateMachinePersist;
+import org.springframework.statemachine.data.mongodb.MongoDbStateMachineRepository;
+import org.springframework.statemachine.persist.DefaultStateMachinePersister;
+import org.springframework.statemachine.persist.StateMachinePersister;
 
 import java.util.Set;
 
@@ -78,15 +78,13 @@ public class StateMachineConfiguration extends StateMachineConfigurerAdapter<Str
     }
 
     @Bean
-    public StateMachinePersist<String, String, String> stateMachinePersist(RedisConnectionFactory connectionFactory) {
-        RedisStateMachineContextRepository<String, String> repository =
-                new RedisStateMachineContextRepository<>(connectionFactory);
-        return new RepositoryStateMachinePersist<>(repository);
+    public StateMachinePersist<String, String, Object> stateMachinePersist(MongoDbStateMachineRepository mongoDbStateMachineRepository) {
+        return new MongoDbRepositoryStateMachinePersist<>(mongoDbStateMachineRepository);
     }
 
     @Bean
-    public RedisStateMachinePersister<String, String> redisStateMachinePersister(
-            StateMachinePersist<String, String, String> stateMachinePersist) {
-        return new RedisStateMachinePersister<>(stateMachinePersist);
+    public StateMachinePersister<String, String, Object> redisStateMachinePersister(
+            StateMachinePersist<String, String, Object> stateMachinePersist) {
+        return new DefaultStateMachinePersister<>(stateMachinePersist);
     }
 }

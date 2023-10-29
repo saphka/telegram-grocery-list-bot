@@ -1,14 +1,12 @@
 package org.saphka.telegram.grocery.bot.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@RedisHash("grocery")
 public record GroceryList(@Id String id, @Indexed Set<String> owners, Set<String> products) {
 
     public GroceryList(String id, Set<String> owners, Set<String> products) {
