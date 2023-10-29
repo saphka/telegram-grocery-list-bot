@@ -6,6 +6,8 @@ import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.Arrays;
+
 @Service
 public class AddProductAction implements Action<String, String> {
 
@@ -18,6 +20,9 @@ public class AddProductAction implements Action<String, String> {
     @Override
     public void execute(StateContext<String, String> context) {
         var message = (Message) context.getMessageHeader("message");
-        groceryListService.addProduct(message.getFrom().getId(), message.getText());
+        groceryListService.addProducts(
+                message.getFrom().getId(),
+                Arrays.asList(message.getText().split("\n"))
+        );
     }
 }

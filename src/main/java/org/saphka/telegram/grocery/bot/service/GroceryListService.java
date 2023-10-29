@@ -40,7 +40,7 @@ public class GroceryListService {
     }
 
     @Transactional
-    public void addProduct(Long ownerId, String product) {
-        repository.save(getOrCreateList(ownerId).products(List.of(product)));
+    public void addProducts(Long ownerId, List<String> products) {
+        repository.save(getOrCreateList(ownerId).products(products));
     }
 }
