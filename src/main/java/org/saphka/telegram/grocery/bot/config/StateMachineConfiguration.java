@@ -25,14 +25,28 @@ public class StateMachineConfiguration extends StateMachineConfigurerAdapter<Str
     private final Action<String, String> listProductsAction;
     private final Action<String, String> requestUserAction;
     private final Action<String, String> shareListAction;
+    private final Action<String, String> removeProductAction;
+    private final Action<String, String> unshareListAction;
+    private final Action<String, String> clearListAction;
 
-    public StateMachineConfiguration(Action<String, String> sendMessageAction, Action<String, String> exceptionHandlerAction, Action<String, String> addProductAction, Action<String, String> listProductsAction, Action<String, String> requestUserAction, Action<String, String> shareListAction) {
+    public StateMachineConfiguration(Action<String, String> sendMessageAction,
+                                     Action<String, String> exceptionHandlerAction,
+                                     Action<String, String> addProductAction,
+                                     Action<String, String> listProductsAction,
+                                     Action<String, String> requestUserAction,
+                                     Action<String, String> shareListAction,
+                                     Action<String, String> removeProductAction,
+                                     Action<String, String> unshareListAction,
+                                     Action<String, String> clearListAction) {
         this.sendMessageAction = sendMessageAction;
         this.exceptionHandlerAction = exceptionHandlerAction;
         this.addProductAction = addProductAction;
         this.listProductsAction = listProductsAction;
         this.requestUserAction = requestUserAction;
         this.shareListAction = shareListAction;
+        this.removeProductAction = removeProductAction;
+        this.unshareListAction = unshareListAction;
+        this.clearListAction = clearListAction;
     }
 
     @Override
@@ -42,7 +56,9 @@ public class StateMachineConfiguration extends StateMachineConfigurerAdapter<Str
                 .states(Set.of(
                         StateMachineStates.READY,
                         StateMachineStates.PRODUCT_ADD,
-                        StateMachineStates.SHARE_PENDING
+                        StateMachineStates.PRODUCT_REMOVE,
+                        StateMachineStates.SHARE_PENDING,
+                        StateMachineStates.UNSHARE_PENDING
                 ));
     }
 
@@ -50,7 +66,7 @@ public class StateMachineConfiguration extends StateMachineConfigurerAdapter<Str
     public void configure(StateMachineTransitionConfigurer<String, String> transitions) throws Exception {
         transitions.withExternal()
                 .source(StateMachineStates.READY).target(StateMachineStates.PRODUCT_ADD)
-                .event(StateMachineEvents.COMMAND_PRODUCT)
+                .event(StateMachineEvents.COMMAND_ADD)
                 .action(sendMessageAction, exceptionHandlerAction)
                 .and()
                 .withExternal()
@@ -60,10 +76,27 @@ public class StateMachineConfiguration extends StateMachineConfigurerAdapter<Str
                 .action(sendMessageAction, exceptionHandlerAction)
                 .and()
                 .withExternal()
+                .source(StateMachineStates.READY).target(StateMachineStates.PRODUCT_REMOVE)
+                .event(StateMachineEvents.COMMAND_REMOVE)
+                .action(sendMessageAction, exceptionHandlerAction)
+                .and()
+                .withExternal()
+                .source(StateMachineStates.PRODUCT_REMOVE).target(StateMachineStates.READY)
+                .event(StateMachineEvents.TEXT_INPUT)
+                .action(removeProductAction, exceptionHandlerAction)
+                .action(sendMessageAction, exceptionHandlerAction)
+                .and()
+                .withExternal()
                 .source(StateMachineStates.READY).target(StateMachineStates.READY)
                 .event(StateMachineEvents.COMMAND_LIST)
                 .action(sendMessageAction, exceptionHandlerAction)
                 .action(listProductsAction, exceptionHandlerAction)
+                .and()
+                .withExternal()
+                .source(StateMachineStates.READY).target(StateMachineStates.READY)
+                .event(StateMachineEvents.COMMAND_CLEAR)
+                .action(sendMessageAction, exceptionHandlerAction)
+                .action(clearListAction, exceptionHandlerAction)
                 .and()
                 .withExternal()
                 .source(StateMachineStates.READY).target(StateMachineStates.SHARE_PENDING)
@@ -74,6 +107,17 @@ public class StateMachineConfiguration extends StateMachineConfigurerAdapter<Str
                 .source(StateMachineStates.SHARE_PENDING).target(StateMachineStates.READY)
                 .event(StateMachineEvents.USER_INPUT)
                 .action(shareListAction, exceptionHandlerAction)
+                .action(sendMessageAction, exceptionHandlerAction)
+                .and()
+                .withExternal()
+                .source(StateMachineStates.READY).target(StateMachineStates.UNSHARE_PENDING)
+                .event(StateMachineEvents.COMMAND_UNSHARE)
+                .action(requestUserAction, exceptionHandlerAction)
+                .and()
+                .withExternal()
+                .source(StateMachineStates.UNSHARE_PENDING).target(StateMachineStates.READY)
+                .event(StateMachineEvents.USER_INPUT)
+                .action(unshareListAction, exceptionHandlerAction)
                 .action(sendMessageAction, exceptionHandlerAction);
     }
 

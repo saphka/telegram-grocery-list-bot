@@ -18,16 +18,32 @@ public record GroceryList(@Id String id, @Indexed Set<String> owners, Set<String
         this.products = Set.copyOf(Objects.requireNonNullElse(products, Set.of()));
     }
 
-    public GroceryList owner(Long ownerId) {
+    public GroceryList addOwner(Long ownerId) {
         var owners = new LinkedHashSet<>(this.owners);
         owners.add(ownerId.toString());
         return new GroceryList(this.id, owners, this.products);
     }
 
-    public GroceryList products(Collection<String> products) {
+    public GroceryList removeOwner(Long ownerId) {
+        var owners = new LinkedHashSet<>(this.owners);
+        owners.remove(ownerId.toString());
+        return new GroceryList(this.id, owners, this.products);
+    }
+
+    public GroceryList addProducts(Collection<String> products) {
         var newProducts = new LinkedHashSet<>(this.products);
         newProducts.addAll(products);
         return new GroceryList(this.id, this.owners, newProducts);
+    }
+
+    public GroceryList removeProducts(Collection<String> products) {
+        var newProducts = new LinkedHashSet<>(this.products);
+        newProducts.removeAll(products);
+        return new GroceryList(this.id, this.owners, newProducts);
+    }
+
+    public GroceryList clearProducts() {
+        return new GroceryList(this.id, this.owners, Set.of());
     }
 
     @Override

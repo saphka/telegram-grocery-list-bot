@@ -30,10 +30,10 @@ public class GroceryListService {
 
     @Transactional
     public void addOwner(Long ownerId, Long newOwnerId) {
-        var finalList = getOrCreateList(ownerId).owner(newOwnerId);
+        var finalList = getOrCreateList(ownerId).addOwner(newOwnerId);
         var oldList = repository.findFirstByOwners(newOwnerId.toString());
         if (oldList.isPresent()) {
-            finalList = finalList.products(oldList.get().products());
+            finalList = finalList.addProducts(oldList.get().products());
             repository.delete(oldList.get());
         }
         repository.save(finalList);
@@ -41,6 +41,21 @@ public class GroceryListService {
 
     @Transactional
     public void addProducts(Long ownerId, List<String> products) {
-        repository.save(getOrCreateList(ownerId).products(products));
+        repository.save(getOrCreateList(ownerId).addProducts(products));
+    }
+
+    @Transactional
+    public void removeProducts(Long ownerId, List<String> products) {
+        repository.save(getOrCreateList(ownerId).removeProducts(products));
+    }
+
+    @Transactional
+    public void clearList(Long ownerId) {
+        repository.save(getOrCreateList(ownerId).clearProducts());
+    }
+
+    @Transactional
+    public void removeOwner(Long ownerId, Long removedOwner) {
+        repository.save(getOrCreateList(ownerId).removeOwner(removedOwner));
     }
 }

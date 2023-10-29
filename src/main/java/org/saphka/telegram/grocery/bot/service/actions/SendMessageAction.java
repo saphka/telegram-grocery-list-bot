@@ -1,5 +1,6 @@
 package org.saphka.telegram.grocery.bot.service.actions;
 
+import org.saphka.telegram.grocery.bot.config.StateMachineEvents;
 import org.saphka.telegram.grocery.bot.config.StateMachineStates;
 import org.saphka.telegram.grocery.bot.service.TelegramService;
 import org.springframework.statemachine.StateContext;
@@ -40,11 +41,17 @@ public class SendMessageAction implements Action<String, String> {
 
     private String getMessageText(StateContext<String, String> context) {
         return switch (context.getTarget().getId()) {
-            case StateMachineStates.PRODUCT_ADD -> "Enter product";
+            case StateMachineStates.PRODUCT_ADD, StateMachineStates.PRODUCT_REMOVE -> "Enter products";
             case StateMachineStates.READY -> switch (context.getSource().getId()) {
-                case StateMachineStates.PRODUCT_ADD -> "Product added";
+                case StateMachineStates.PRODUCT_ADD -> "Products added";
+                case StateMachineStates.PRODUCT_REMOVE -> "Products removed";
                 case StateMachineStates.SHARE_PENDING -> "Grocery list shared";
-                case StateMachineStates.READY -> "Here is your list";
+                case StateMachineStates.UNSHARE_PENDING -> "Grocery list unshared";
+                case StateMachineStates.READY -> switch (context.getEvent()) {
+                    case StateMachineEvents.COMMAND_LIST -> "Here is your list";
+                    case StateMachineEvents.COMMAND_CLEAR -> "List cleared";
+                    default -> null;
+                };
                 default -> null;
             };
             default -> null;
